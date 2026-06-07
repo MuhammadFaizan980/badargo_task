@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:badargo_task/data/constants/app_constants.dart';
 import 'package:badargo_task/utils/location_utils.dart';
+import 'package:badargo_task/utils/network_utils.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -13,8 +15,10 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
 const notificationChannelId = AppConstants.notificationChannelId;
 const notificationId = AppConstants.notificationId;
 final LocationUtils _locationUtils = LocationUtils();
+final NetworkUtils _networkUtils = NetworkUtils();
 
-StreamSubscription? _locationSSubscription;
+StreamSubscription? _locationSubscription;
+StreamSubscription? _connectivitySubscription;
 
 void startLocationService() {
   final service = FlutterBackgroundService();
@@ -81,12 +85,13 @@ void onStart(ServiceInstance service) async {
 
   service.on('stop').listen((event) {
     service.invoke(AppConstants.onLocationServiceStopped);
-    _locationSSubscription?.cancel();
+    _locationSubscription?.cancel();
+    _connectivitySubscription?.cancel();
     service.stopSelf();
   });
 
-  _locationSSubscription = _locationUtils.initLocationStream(
-    onLocationUpdated: (position) {
+  _locationSubscription = _locationUtils.initLocationStream(
+    onLocationUpdated: (position) async {
       print('DXDIAG::SERVICE::${position?.latitude}, ${position?.longitude}');
 
       service.invoke(AppConstants.onLocationUpdate, {
@@ -95,6 +100,24 @@ void onStart(ServiceInstance service) async {
         'accuracy': position?.accuracy,
         'heading': position?.heading,
       });
+
+      if (await _networkUtils.hasInternetConnection()) {
+        //TODO: save to remote server...
+      } else {
+        //TODO: save to local db...
+      }
+    },
+  );
+
+  _connectivitySubscription = _networkUtils.initConnectivityStream(
+    onConnectivityChanged: (connectivityResult) {
+      if (connectivityResult.contains(ConnectivityResult.mobile) ||
+          connectivityResult.contains(ConnectivityResult.wifi)) {
+        print('DXDIAG::NETWORK_ENABLED');
+        //TODO: sync local stored location data with server...
+      } else {
+        print('DXDIAG::NETWORK_DISABLE');
+      }
     },
   );
 
