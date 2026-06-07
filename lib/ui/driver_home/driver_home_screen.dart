@@ -41,13 +41,7 @@ class DriverHomeScreen extends StatelessWidget {
                 onMapTapped: (coordinates) {},
               ),
             ),
-            AppButton.expanded(
-              label: 'Accept Order',
-              onTap: () {
-                vm.appBaseModel.acceptOrder();
-                vm.notifyListeners();
-              },
-            ),
+            AppButton.expanded(label: 'Accept Order', onTap: vm.onAcceptOrderTapped),
             SizedBox(height: 1.h),
             AppButton.expanded(
               label: 'Reject Order',
