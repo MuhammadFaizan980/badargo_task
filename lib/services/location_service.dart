@@ -121,12 +121,14 @@ void onStart(ServiceInstance service) async {
     },
   );
 
-  Timer.periodic(const Duration(seconds: 1), (timer) async {
-    if (service is AndroidServiceInstance && await service.isForegroundService()) {
-      service.setForegroundNotificationInfo(
-        title: "Background Location Active",
-        content: "Tracking location in background...",
-      );
-    }
-  });
+  if (Platform.isAndroid) {
+    Timer.periodic(const Duration(seconds: 1), (timer) async {
+      if (service is AndroidServiceInstance && await service.isForegroundService()) {
+        service.setForegroundNotificationInfo(
+          title: "Background Location Active",
+          content: "Tracking location in background...",
+        );
+      }
+    });
+  }
 }

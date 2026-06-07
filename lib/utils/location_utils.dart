@@ -31,5 +31,6 @@ class LocationUtils {
           distanceFilter: 20,
           pauseLocationUpdatesAutomatically: false,
           showBackgroundLocationIndicator: true,
+          allowBackgroundLocationUpdates: true,
         );
 }
