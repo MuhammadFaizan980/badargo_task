@@ -10,6 +10,7 @@ class MapBoxWidget extends StatefulWidget {
   final double? userLng;
   final double? initialZoom;
   final bool scrollable;
+  final Completer<GoogleMapController> controller;
   final Set<Marker> markers;
   final Function(LatLng) onMapTapped;
 
@@ -21,6 +22,7 @@ class MapBoxWidget extends StatefulWidget {
     required this.userLng,
     this.initialZoom,
     this.scrollable = true,
+    required this.controller,
     required this.markers,
     required this.onMapTapped,
   });
@@ -30,8 +32,6 @@ class MapBoxWidget extends StatefulWidget {
 }
 
 class _MapBoxWidgetState extends State<MapBoxWidget> {
-  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
-
   late final CameraPosition _initialCameraPosition;
 
   @override
@@ -52,11 +52,11 @@ class _MapBoxWidgetState extends State<MapBoxWidget> {
       scrollGesturesEnabled: widget.scrollable,
       myLocationButtonEnabled: false,
       myLocationEnabled: false,
-      zoomGesturesEnabled: false,
-      zoomControlsEnabled: false,
       onTap: widget.onMapTapped,
       onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
+        if (!widget.controller.isCompleted) {
+          widget.controller.complete(controller);
+        }
       },
     );
   }

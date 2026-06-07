@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badargo_task/data/app_base_model.dart';
 import 'package:badargo_task/data/app_base_vm.dart';
 import 'package:badargo_task/service_initiator.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:badargo_task/data/app_constants.dart';
+import 'package:badargo_task/data/constants/app_constants.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationUtils {

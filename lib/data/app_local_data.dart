@@ -1,4 +1,4 @@
-import 'package:badargo_task/data/app_constants.dart';
+import 'package:badargo_task/data/constants/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLocalData {
