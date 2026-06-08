@@ -1,3 +1,4 @@
+import 'package:badargo_task/data/app_base_model.dart';
 import 'package:badargo_task/data/clients/local/mock_local_db_data_client.dart';
 import 'package:badargo_task/data/clients/remote/mock_firebase_firestore_client.dart';
 import 'package:badargo_task/data/local/mock_local_data.dart';
@@ -8,6 +9,9 @@ import 'package:badargo_task/data/repos/local_data/local_data_repo.dart';
 import 'package:badargo_task/data/repos/local_data/local_data_repo_imp.dart';
 import 'package:badargo_task/data/repos/remote_data/remote_data_repo.dart';
 import 'package:badargo_task/data/repos/remote_data/remote_data_repo_imp.dart';
+import 'package:badargo_task/ui/driver_home/driver_home_vm.dart';
+import 'package:badargo_task/utils/app_permission_handler.dart';
+import 'package:badargo_task/utils/location_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -29,7 +33,59 @@ void main() {
       expect(status, true);
     });
   });
+  group('Home VM Test', () {
+    DriverHomeVm driverHomeVm = DriverHomeVm(
+      appBaseModel: AppBaseModel(
+        appLocalData: MockLocalData(),
+        localDataRepo: LocalDataRepoImp(MockLocalDbDataClient()),
+        remoteDataRepo: RemoteDataRepoImp(MockFirebaseFirestoreClient()),
+        service: null,
+      ),
+      appPermissionHandler: AppPermissionHandler(),
+      homeRepo: HomeRepoImp(MockLocalData()),
+      locationUtils: LocationUtils(),
+      isMock: true,
+    );
 
+    test('On location updates received', () async {
+      driverHomeVm.onLocationUpdated(lat: 12.345, lng: -122.345, accuracy: 5.0, heading: 120.0);
+      expect(driverHomeVm.lat, 12.345);
+      expect(driverHomeVm.lng, -122.345);
+      expect(driverHomeVm.accuracy, 5.0);
+      expect(driverHomeVm.heading, 120.0);
+    });
+
+    test('Get order status', () async {
+      bool status = await driverHomeVm.getOrderStatus();
+      expect(status, false);
+    });
+
+    test('Accepting order', () async {
+      await driverHomeVm.acceptOrder();
+      expect(driverHomeVm.hasActiveOrder, true);
+    });
+
+    test('Cancelling order', () async {
+      await driverHomeVm.cancelOrder();
+      expect(driverHomeVm.hasActiveOrder, false);
+    });
+
+    test('On location updates received', () async {
+      driverHomeVm.onLocationUpdated(lat: 12.345, lng: -122.345, accuracy: 5.0, heading: 120.0);
+      expect(driverHomeVm.lat, 12.345);
+      expect(driverHomeVm.lng, -122.345);
+      expect(driverHomeVm.accuracy, 5.0);
+      expect(driverHomeVm.heading, 120.0);
+    });
+
+    test('On location service stopped', () async {
+      driverHomeVm.onLocationServiceStopped();
+      expect(driverHomeVm.lat, null);
+      expect(driverHomeVm.lng, null);
+      expect(driverHomeVm.accuracy, null);
+      expect(driverHomeVm.heading, null);
+    });
+  });
   group('Local Data Repo Tests', () {
     LocalDataRepo localDataRepo = LocalDataRepoImp(MockLocalDbDataClient());
 
@@ -52,7 +108,6 @@ void main() {
       expect(responseModel.success, true);
     });
   });
-
   group('Remote Data Repo Tests', () {
     RemoteDataRepo remoteDataRepo = RemoteDataRepoImp(MockFirebaseFirestoreClient());
     test('Save new entry', () async {

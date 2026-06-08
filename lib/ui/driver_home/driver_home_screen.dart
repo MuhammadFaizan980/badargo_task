@@ -3,6 +3,7 @@ import 'package:badargo_task/utils/widgets/app_button.dart';
 import 'package:badargo_task/utils/widgets/home_header.dart';
 import 'package:badargo_task/utils/widgets/map_box_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:sizer/sizer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -12,7 +13,13 @@ class DriverHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-      viewModelBuilder: () => DriverHomeVm(),
+      viewModelBuilder: () => DriverHomeVm(
+        appBaseModel: GetIt.I.get(),
+        homeRepo: GetIt.I.get(),
+        appPermissionHandler: GetIt.I.get(),
+        locationUtils: GetIt.I.get(),
+        isMock: false,
+      ),
       onViewModelReady: (vm) async => vm.hasActiveOrder = await vm.getOrderStatus(),
       builder: (context, vm, _) => Scaffold(
         body: Column(

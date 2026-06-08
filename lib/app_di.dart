@@ -6,6 +6,7 @@ import 'package:badargo_task/data/local/local_data_dispatcher.dart';
 import 'package:badargo_task/data/repos/home/home_repo_imp.dart';
 import 'package:badargo_task/utils/app_permission_handler.dart';
 import 'package:badargo_task/utils/location_utils.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'data/clients/local/local_db_data_client.dart';
@@ -24,7 +25,14 @@ class AppDi {
     GetIt.I.registerSingleton<HomeRepo>(HomeRepoImp(GetIt.I.get<LocalDataDispatcher>()));
     GetIt.I.registerSingleton<LocalDataRepo>(LocalDataRepoImp(LocalDbDataClient()));
     GetIt.I.registerSingleton<RemoteDataRepo>(RemoteDataRepoImp(GetIt.I.get<RemoteDataClient>()));
-    GetIt.I.registerSingleton<AppBaseModel>(AppBaseModel());
+    GetIt.I.registerSingleton<AppBaseModel>(
+      AppBaseModel(
+        appLocalData: GetIt.I.get(),
+        localDataRepo: GetIt.I.get(),
+        remoteDataRepo: GetIt.I.get(),
+        service: FlutterBackgroundService(),
+      ),
+    );
     await GetIt.I.allReady();
   }
 }

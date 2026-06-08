@@ -4,45 +4,54 @@ import 'package:badargo_task/data/app_base_model.dart';
 import 'package:badargo_task/data/app_base_vm.dart';
 import 'package:badargo_task/data/repos/home/home_repo.dart';
 import 'package:badargo_task/service_initiator.dart';
-import 'package:badargo_task/services/location_service.dart';
 import 'package:badargo_task/utils/app_permission_handler.dart';
 import 'package:badargo_task/utils/location_utils.dart';
-import 'package:get_it/get_it.dart';
+
+import '../../services/location_service.dart';
 
 class DriverHomeVm extends AppBaseVm {
-  final AppBaseModel appBaseModel = GetIt.I.get();
-  final HomeRepo _homeRepo = GetIt.I.get();
-  final AppPermissionHandler _appPermissionHandler = GetIt.I.get();
-  final LocationUtils _locationUtils = GetIt.I.get();
+  final AppBaseModel appBaseModel;
+  final HomeRepo homeRepo;
+  final AppPermissionHandler appPermissionHandler;
+  final LocationUtils locationUtils;
+  final bool isMock;
 
   bool _hasActiveOrder = false;
   double? lat, lng, heading, accuracy;
 
+  DriverHomeVm({
+    required this.appBaseModel,
+    required this.homeRepo,
+    required this.appPermissionHandler,
+    required this.locationUtils,
+    required this.isMock,
+  });
+
   Future<void> onAcceptOrderTapped() async {
-    if (await _appPermissionHandler.requestLocationPermissions(showDialog: true)) {
-      if (!(await _locationUtils.isLocationServiceAvailable())) {
-        await _locationUtils.enableLocationServiceIfNotAvailable();
+    if (await appPermissionHandler.requestLocationPermissions(showDialog: true)) {
+      if (!(await locationUtils.isLocationServiceAvailable())) {
+        await locationUtils.enableLocationServiceIfNotAvailable();
       } else {
-        await ServiceInitiator.initServices();
+        isMock ? null : await ServiceInitiator.initServices();
         Future.delayed(const Duration(milliseconds: 500));
         acceptOrder();
       }
     }
   }
 
-  Future<bool> getOrderStatus() async => await _homeRepo.getOrderStatus();
+  Future<bool> getOrderStatus() async => await homeRepo.getOrderStatus();
 
   Future<void> acceptOrder() async {
-    await _homeRepo.updateOrderStatus(status: true);
-    startLocationService();
+    await homeRepo.updateOrderStatus(status: true);
     _hasActiveOrder = true;
+    isMock ? null : startLocationService();
     notifyListeners();
   }
 
   Future<void> cancelOrder() async {
-    await _homeRepo.updateOrderStatus(status: false);
-    stopLocationService();
+    await homeRepo.updateOrderStatus(status: false);
     _hasActiveOrder = false;
+    isMock ? null : stopLocationService();
     notifyListeners();
   }
 
