@@ -25,7 +25,7 @@ Add your API key inside the `<application>` tag using the following `<meta-data>
     <application>
         <meta-data 
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_ANDROID_API_KEY_HERE" />
+            android:value="YOUR_API_KEY_HERE" />
    </application>
 </manifest>
 ```
