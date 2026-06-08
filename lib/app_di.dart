@@ -18,11 +18,11 @@ class AppDi {
     GetIt.I.registerSingleton<RemoteDataClient>(FirebaseFirestoreClient());
     GetIt.I.registerSingleton<AppDatabase>(AppDatabase());
     GetIt.I.registerSingleton<LocationUtils>(LocationUtils());
-    GetIt.I.registerSingleton<AppBaseModel>(AppBaseModel());
     GetIt.I.registerSingleton<AppPermissionHandler>(AppPermissionHandler());
     GetIt.I.registerSingleton<HomeRepo>(HomeRepoImpHomeRepo());
     GetIt.I.registerSingleton<LocalDataRepo>(LocalDataRepoImp(GetIt.I.get<AppDatabase>()));
     GetIt.I.registerSingleton<RemoteDataRepo>(RemoteDataRepoImp(GetIt.I.get<RemoteDataClient>()));
+    GetIt.I.registerSingleton<AppBaseModel>(AppBaseModel());
     await GetIt.I.allReady();
   }
 }

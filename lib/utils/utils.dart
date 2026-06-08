@@ -14,7 +14,7 @@ Future<void> showPermissionMessageDialog() async {
     context: context,
     builder: (context) => PermissionsMessageDialog(
       title: 'Message!',
-      message: 'Missing location permission!',
+      message: 'Missing location and notifications permissions!',
       iconData: CupertinoIcons.settings,
       onOpenSettingsTapped: () async {
         getAppNavigator().pop();
