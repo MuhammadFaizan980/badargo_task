@@ -2,17 +2,23 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:badargo_task/data/clients/firebase_firestore_client.dart';
 import 'package:badargo_task/data/constants/app_constants.dart';
 import 'package:badargo_task/data/local/db/app_database.dart';
 import 'package:badargo_task/data/models/app_data_provider_response_model.dart';
 import 'package:badargo_task/data/repos/local_data/local_data_repo.dart';
 import 'package:badargo_task/data/repos/local_data/local_data_repo_imp.dart';
+import 'package:badargo_task/data/repos/remote_data/remote_data_repo.dart';
+import 'package:badargo_task/data/repos/remote_data/remote_data_repo_imp.dart';
 import 'package:badargo_task/utils/location_utils.dart';
 import 'package:badargo_task/utils/network_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../firebase_options.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -21,6 +27,7 @@ const notificationId = AppConstants.notificationId;
 final LocationUtils _locationUtils = LocationUtils();
 final NetworkUtils _networkUtils = NetworkUtils();
 final LocalDataRepo _localDataRepo = LocalDataRepoImp(AppDatabase());
+final RemoteDataRepo _remoteDataRepo = RemoteDataRepoImp(FirebaseFirestoreClient());
 
 StreamSubscription? _locationSubscription;
 StreamSubscription? _connectivitySubscription;
@@ -84,6 +91,9 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   if (service is AndroidServiceInstance) {
     service.setAsForegroundService();
   }
@@ -111,25 +121,39 @@ void onStart(ServiceInstance service) async {
         });
 
         if (await _networkUtils.hasInternetConnection()) {
-          //TODO: save to remote server...
+          _remoteDataRepo.saveLocationEntry(
+            lat: position.latitude,
+            lng: position.longitude,
+            accuracy: position.accuracy,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+          );
         } else {
-          AppDataProviderResponseModel response = await _localDataRepo.addNewEntry(
+          await _localDataRepo.addNewEntry(
             lat: position.latitude,
             lng: position.longitude,
             accuracy: position.accuracy,
           );
-          print('DXDIAG::${response.success}');
         }
       }
     },
   );
 
   _connectivitySubscription = _networkUtils.initConnectivityStream(
-    onConnectivityChanged: (connectivityResult) {
+    onConnectivityChanged: (connectivityResult) async {
       if (connectivityResult.contains(ConnectivityResult.mobile) ||
           connectivityResult.contains(ConnectivityResult.wifi)) {
-        print('DXDIAG::NETWORK_ENABLED');
-        //TODO: sync local stored location data with server...
+        AppDataProviderResponseModel responseModel = await _localDataRepo.getAllSavedEntries();
+        if (responseModel.success && (responseModel.data as List<LocationLocalTableData>).isNotEmpty) {
+          (responseModel.data as List<LocationLocalTableData>).forEach((e) async {
+            await _remoteDataRepo.saveLocationEntry(
+              lat: double.parse(e.lat!),
+              lng: double.parse(e.lng!),
+              accuracy: double.parse(e.accuracy!),
+              timestamp: e.timestamp!,
+            );
+            _localDataRepo.removeEntry(id: e.id);
+          });
+        }
       }
     },
   );
