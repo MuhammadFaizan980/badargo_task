@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:badargo_task/data/clients/firebase_firestore_client.dart';
+import 'package:badargo_task/data/clients/local/local_db_data_client.dart';
+import 'package:badargo_task/data/clients/remote/firebase_firestore_client.dart';
 import 'package:badargo_task/data/constants/app_constants.dart';
 import 'package:badargo_task/data/local/db/app_database.dart';
 import 'package:badargo_task/data/models/app_data_provider_response_model.dart';
@@ -26,7 +27,7 @@ const notificationChannelId = AppConstants.notificationChannelId;
 const notificationId = AppConstants.notificationId;
 final LocationUtils _locationUtils = LocationUtils();
 final NetworkUtils _networkUtils = NetworkUtils();
-final LocalDataRepo _localDataRepo = LocalDataRepoImp(AppDatabase());
+final LocalDataRepo _localDataRepo = LocalDataRepoImp(LocalDbDataClient());
 final RemoteDataRepo _remoteDataRepo = RemoteDataRepoImp(FirebaseFirestoreClient());
 
 StreamSubscription? _locationSubscription;

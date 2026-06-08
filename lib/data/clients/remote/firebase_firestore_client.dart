@@ -1,4 +1,4 @@
-import 'package:badargo_task/data/clients/remote_data_client.dart';
+import 'package:badargo_task/data/clients/remote/remote_data_client.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseFirestoreClient extends RemoteDataClient {
