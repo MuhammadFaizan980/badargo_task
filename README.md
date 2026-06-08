@@ -1,16 +1,60 @@
-# badargo_task
+# Flutter Map Application
 
-A new Flutter project.
+A minimalist and high-performance Flutter application featuring real-time map integrations.
+
+## Prerequisites
+
+Before running or building the application, ensure your environment meets the following requirement:
+
+* **Flutter SDK**: `Channel stable, 3.38.9`
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Google Maps API Configuration
 
-A few resources to get you started if this is your first Flutter project:
+To use the mapping features, you must generate your own Google Maps API key via the Google Cloud
+Console and configure both platform-specific files as detailed below.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+#### 1. Android Setup
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Open your Android manifest file located at:
+`android/app/src/main/AndroidManifest.xml`
+
+Add your API key inside the `<application>` tag using the following `<meta-data>` element:
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <meta-data 
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_ANDROID_API_KEY_HERE" />
+   </application>
+</manifest>
+```
+
+#### 2. iOS Setup
+
+Open your iOS application delegate file located at `ios/Runner/AppDelegate.swift`
+
+Import `GoogleMaps` and specify your API key inside the
+`application(_:didFinishLaunchingWithOptions:)` method before
+`GeneratedPluginRegistrant.register(with:):`
+
+```swift
+import UIKit
+import Flutter
+import GoogleMaps
+
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+
+        GMSServices.provideAPIKey("YOUR_IOS_API_KEY_HERE")
+        
+        GeneratedPluginRegistrant.register(with: self)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+}
+```
