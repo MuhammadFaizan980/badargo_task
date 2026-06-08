@@ -1,13 +1,9 @@
-import 'package:badargo_task/data/models/app_data_provider_response_model.dart';
+import 'package:badargo_task/data/local/db/app_database.dart';
 
 abstract class RemoteDataClient {
-  Future<AppDataProviderResponseModel> getAllSavedEntries();
+  Future<List<LocationLocalTableData>?> getAllSavedEntries();
 
-  Future<AppDataProviderResponseModel> addNewEntry({
-    required double lat,
-    required double lng,
-    required double accuracy,
-  });
+  Future<String?> addNewEntry({required double lat, required double lng, required double accuracy});
 
-  Future<AppDataProviderResponseModel> removeEntry({required int id});
+  Future<String?> removeEntry({required int id});
 }

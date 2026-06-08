@@ -37,6 +37,7 @@ void main() {
       AppDataProviderResponseModel responseModel = await localDataRepo.getAllSavedEntries();
       expect(responseModel.success, true);
     });
+
     test('Save new entry', () async {
       AppDataProviderResponseModel responseModel = await localDataRepo.addNewEntry(
         lat: 12.099,
@@ -45,6 +46,7 @@ void main() {
       );
       expect(responseModel.success, true);
     });
+
     test('Remove entry', () async {
       AppDataProviderResponseModel responseModel = await localDataRepo.removeEntry(id: 12);
       expect(responseModel.success, true);

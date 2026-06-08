@@ -1,22 +1,16 @@
 import 'package:badargo_task/data/clients/local/local_data_client.dart';
+import 'package:badargo_task/data/local/db/app_database.dart';
 import 'package:badargo_task/data/mappers/local_data_mapper.dart';
-import 'package:badargo_task/data/models/app_data_provider_response_model.dart';
 
 class MockLocalDbDataClient extends RemoteDataClient {
   final LocalDataMapper localDataMapper = LocalDataMapper();
 
   @override
-  Future<AppDataProviderResponseModel> addNewEntry({
-    required double lat,
-    required double lng,
-    required accuracy,
-  }) async => localDataMapper.toGenericSuccessResponseModel(response: null);
+  Future<String?> addNewEntry({required double lat, required double lng, required accuracy}) async => null;
 
   @override
-  Future<AppDataProviderResponseModel> getAllSavedEntries() async =>
-      localDataMapper.toGenericSuccessResponseModel(response: null);
+  Future<List<LocationLocalTableData>?> getAllSavedEntries() async => [];
 
   @override
-  Future<AppDataProviderResponseModel> removeEntry({required int id}) async =>
-      localDataMapper.toGenericSuccessResponseModel(response: null);
+  Future<String?> removeEntry({required int id}) async => null;
 }

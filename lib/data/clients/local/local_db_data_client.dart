@@ -1,19 +1,12 @@
 import 'package:badargo_task/data/clients/local/local_data_client.dart';
 import 'package:badargo_task/data/local/db/app_database.dart';
-import 'package:badargo_task/data/mappers/local_data_mapper.dart';
-import 'package:badargo_task/data/models/app_data_provider_response_model.dart';
 import 'package:drift/drift.dart';
 
 class LocalDbDataClient extends RemoteDataClient {
   final AppDatabase _appDatabase = AppDatabase();
-  final LocalDataMapper localDataMapper = LocalDataMapper();
 
   @override
-  Future<AppDataProviderResponseModel> addNewEntry({
-    required double lat,
-    required double lng,
-    required accuracy,
-  }) async {
+  Future<String?> addNewEntry({required double lat, required double lng, required accuracy}) async {
     try {
       await _appDatabase
           .into(_appDatabase.locationLocalTable)
@@ -25,26 +18,29 @@ class LocalDbDataClient extends RemoteDataClient {
               timestamp: Value(DateTime.now().millisecondsSinceEpoch),
             ),
           );
-      return localDataMapper.toGenericSuccessResponseModel(response: null);
+      return null;
+      ;
     } catch (e) {
-      return localDataMapper.toGenericFailureResponseModel(message: e.toString(), response: null);
+      return e.toString();
     }
   }
 
   @override
-  Future<AppDataProviderResponseModel> getAllSavedEntries() async {
-    return localDataMapper.toGenericSuccessResponseModel(
-      response: await (_appDatabase.select(_appDatabase.locationLocalTable)).get(),
-    );
+  Future<List<LocationLocalTableData>?> getAllSavedEntries() async {
+    try {
+      return await (_appDatabase.select(_appDatabase.locationLocalTable)).get();
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  Future<AppDataProviderResponseModel> removeEntry({required int id}) async {
+  Future<String?> removeEntry({required int id}) async {
     try {
       await (_appDatabase.delete(_appDatabase.locationLocalTable)..where((table) => table.id.equals(id))).go();
-      return localDataMapper.toGenericSuccessResponseModel(response: null);
+      return null;
     } catch (e) {
-      return localDataMapper.toGenericFailureResponseModel(message: e.toString(), response: null);
+      return e.toString();
     }
   }
 }
