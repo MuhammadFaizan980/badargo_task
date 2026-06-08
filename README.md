@@ -2,6 +2,9 @@
 
 Before running or building the application, ensure your environment meets the following requirement:
 
+* **Android Studio Version**:
+`Android Studio Otter 3 Feature Drop | 2025.2.3`
+
 * **Flutter SDK**: `Channel stable, 3.38.9`
 
 ## Getting Started
