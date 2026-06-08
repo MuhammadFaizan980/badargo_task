@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:badargo_task/data/app_base_model.dart';
 import 'package:badargo_task/data/app_base_vm.dart';
 import 'package:badargo_task/data/repos/home/home_repo.dart';
-import 'package:badargo_task/service_initiator.dart';
+import 'package:badargo_task/services/service_initiator.dart';
 import 'package:badargo_task/utils/app_permission_handler.dart';
 import 'package:badargo_task/utils/location_utils.dart';
 
