@@ -3,23 +3,30 @@ import 'dart:async';
 import 'package:badargo_task/data/app_base_model.dart';
 import 'package:badargo_task/data/app_base_vm.dart';
 import 'package:badargo_task/data/repos/home/home_repo.dart';
-import 'package:badargo_task/service_initiator.dart';
+import 'package:badargo_task/data/repos/local_data/local_data_repo.dart';
 import 'package:badargo_task/services/location_service.dart';
 import 'package:badargo_task/utils/app_permission_handler.dart';
+import 'package:badargo_task/utils/location_utils.dart';
 import 'package:get_it/get_it.dart';
 
 class DriverHomeVm extends AppBaseVm {
   final AppBaseModel appBaseModel = GetIt.I.get();
   final HomeRepo _homeRepo = GetIt.I.get();
+  final LocalDataRepo _localDataRepo = GetIt.I.get();
   final AppPermissionHandler _appPermissionHandler = GetIt.I.get();
+  final LocationUtils _locationUtils = GetIt.I.get();
+
   bool _hasActiveOrder = false;
   double? lat, lng, heading, accuracy;
 
   Future<void> onAcceptOrderTapped() async {
     if (await _appPermissionHandler.requestLocationPermissions(showDialog: true)) {
-      await ServiceInitiator.initServices();
-      Future.delayed(const Duration(milliseconds: 500));
-      acceptOrder();
+      if (!(await _locationUtils.isLocationServiceAvailable())) {
+        await _locationUtils.enableLocationServiceIfNotAvailable();
+      } else {
+        Future.delayed(const Duration(milliseconds: 500));
+        acceptOrder();
+      }
     }
   }
 

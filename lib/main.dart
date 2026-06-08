@@ -2,18 +2,21 @@ import 'package:badargo_task/data/app_base_model.dart';
 import 'package:badargo_task/router/app_routes.dart';
 import 'package:badargo_task/router/app_routes_generator.dart';
 import 'package:badargo_task/utils/app_theme_colors.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sizer/sizer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'app_di.dart';
+import 'firebase_options.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 final AppThemeColors appThemeColors = AppThemeColors();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AppDi.initDi();
 
   runApp(

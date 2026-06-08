@@ -4,6 +4,12 @@ import 'dart:io';
 import 'package:geolocator/geolocator.dart';
 
 class LocationUtils {
+  Future<bool> isLocationServiceAvailable() async => await Geolocator.isLocationServiceEnabled();
+
+  Future<void> enableLocationServiceIfNotAvailable() async {
+    await Geolocator.openLocationSettings();
+  }
+
   StreamSubscription initLocationStream({required Function(Position?) onLocationUpdated}) {
     return Geolocator.getPositionStream(
       locationSettings: _getLocationSettings(),
@@ -19,6 +25,7 @@ class LocationUtils {
           accuracy: LocationAccuracy.high,
           distanceFilter: 20,
           intervalDuration: const Duration(seconds: 5),
+          forceLocationManager: true,
           foregroundNotificationConfig: const ForegroundNotificationConfig(
             notificationText: "Location Service",
             notificationTitle: "Running...",

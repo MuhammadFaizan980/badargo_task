@@ -60,7 +60,7 @@ class _MapBoxWidgetState extends State<MapBoxWidget> with TickerProviderStateMix
     );
 
     // 3. Initialize the 2.5-second animation driver timeline
-    _animationController = AnimationController(duration: const Duration(milliseconds: 2500), vsync: this);
+    _animationController = AnimationController(duration: const Duration(milliseconds: 5000), vsync: this);
     _animationController!.addListener(_onAnimationTick);
 
     _locationUpdateSubscription = FlutterBackgroundService().on(AppConstants.onLocationUpdate).listen((
