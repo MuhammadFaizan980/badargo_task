@@ -1,7 +1,3 @@
-# Flutter Map Application
-
-A minimalist and high-performance Flutter application featuring real-time map integrations.
-
 ## Prerequisites
 
 Before running or building the application, ensure your environment meets the following requirement:
