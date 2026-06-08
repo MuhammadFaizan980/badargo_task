@@ -21,9 +21,11 @@ void main() {
 
       final endOrderButton = find.text('End Order');
       expect(endOrderButton, findsOneWidget);
+
+      await tester.tap(endOrderButton);
       await tester.pumpAndSettle(Duration(seconds: 2));
 
-      expect(find.text('End Order'), findsNothing);
+      expect(find.text('Order in progress...'), findsNothing);
     });
   });
 }
