@@ -112,8 +112,6 @@ void onStart(ServiceInstance service) async {
           position?.longitude != null &&
           position?.accuracy != null &&
           position?.heading != null) {
-        print('DXDIAG::SERVICE::${position?.latitude}, ${position?.longitude}');
-
         service.invoke(AppConstants.onLocationUpdate, {
           'lat': position!.latitude,
           'lng': position.longitude,
