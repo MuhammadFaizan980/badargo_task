@@ -5,7 +5,7 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  //=====MAKE SURE TO GRANT PERMISSIONS FIRST=====
+  //=====MAKE SURE TO RUN & GRANT PERMISSIONS FIRST=====
   group('End-to-End App Flow Test', () {
     testWidgets('Splash to home and starting order', (WidgetTester tester) async {
       app.main();
