@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1000544844870",
+    "firebase_url": "https://faravi-erp-dev-default-rtdb.firebaseio.com",
+    "project_id": "faravi-erp-dev",
+    "storage_bucket": "faravi-erp-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000544844870:android:c90b469e33682148dade47",
+        "android_client_info": {
+          "package_name": "com.badargo.qa.badargo_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGqyBfMz9-haiT0o1LnH3bJO6iH7mhgpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000544844870:android:fe339dfae3b5eb41dade47",
+        "android_client_info": {
+          "package_name": "com.farabiclinics.hr.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGqyBfMz9-haiT0o1LnH3bJO6iH7mhgpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
